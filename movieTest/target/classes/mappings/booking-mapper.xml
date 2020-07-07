@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BookingDAO">
+  <select id="selectListMovie" resultType="movie"><!--영화 목록 -->
+    select *
+      from movies
+     <where> 
+      <if test="m_code != null">
+       and m_code=#{m_code}
+            </if>
+     </where>
+
+  </select>
+  <select id="selectListArea" resultType="theater"><!-- 지역 목록 -->
+    select distinct theater_area 
+      from theater
+  </select>
+  <select id="selectListTheater" resultType="theater"><!-- 극장 목록 -->
+    select distinct theater_name
+      from theater
+     where theater_area=#{theater_area}
+     
+  </select>
+  <select id="selectListTimetable" resultType="timetable"><!-- 상영 시간표 목록 -->
+    select *
+      from timetable 
+     <where> 
+       theater_name=#{theater_name} 
+       <![CDATA[
+       and start_time>sysdate
+       and start_time<to_date(((select to_char(sysdate+3,'yyyyMMdd') from dual) || '2359'),'yyyyMMddHH24mi')
+       ]]>
+        <if test="m_code != 'none'">
+       and m_code=#{m_code}
+       </if> 
+       order by start_time
+     </where>
+  </select>
+  <select id="selectTimetable" resultType="timetable"><!-- 상영시간표 가져오기 -->
+    select *
+      from timetable
+     where timetable_code=#{timetable_code}
+  </select>
+  <select id="selectListSeat" resultType="seat"><!-- 예약된 좌석 표시 -->
+    select *
+      from seat
+     where timetable_code=#{timetable_code} and isbooked=1
+  </select>
+  <insert id="insertBooking" parameterType="booking"><!-- 예약 -->
+    insert into 
+      booking(booking_code, customer_ID, m_name, theater_name, screen_name, seat_code, seats_num, screening_date, book_date, booking_price)
+     values(#{booking_code}, #{customer_ID}, #{m_name}, #{theater_name}, #{screen_name}, #{seat_code}, #{seats_num}, #{screening_date}, sysdate, #{booking_price})
+  </insert>
+  <update id="updateSeat"><!-- 좌석 예약 표시 -->
+    update 
+      seat SET isbooked = 1 
+     where seat_code=#{seat_code}
+  </update>
+  <select id="selectScreen" resultType="screen">
+    select *
+      from screen
+     where screen_code=#{screen_code}
+  </select>
+</mapper>

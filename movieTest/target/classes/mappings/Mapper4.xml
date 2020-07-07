@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="review">
+	
+<!-- 리뷰등록 -->
+<insert id="insertReview" parameterType="review">
+<![CDATA[
+ insert into review1 values(#{id},#{m_code},#{review_num},#{content},#{star},#{regist_day})
+]]>
+</insert>
+<!-- 리뷰 등록시 movie_code에 따라 넘버 1로 초기화 -->
+<select id="chkFirstReview" resultType="review">
+<![CDATA[
+	select * from review1 where m_code = #{m_code}
+]]>
+</select>
+<!-- 해당 영화에 해당 아이디가 작성한 리뷰가 있는지 검토 -->
+<select id="chkReviewDoubleInsert" resultType="int">
+<![CDATA[
+	select count(*) from review1 where m_code = #{m_code} and id = #{id}
+]]>
+</select>
+
+
+
+<!-- 리뷰 삭제 -->
+<delete id="deleteReview" parameterType="review">
+<![CDATA[
+ delete from review1 where m_code=#{m_code} and review_num=#{review_num}
+]]>  
+</delete>
+<select id="getReviewListFromDelete" resultType="int">
+<![CDATA[
+   select count(*) from review1 where m_code = #{m_code} and review_num > #{review_num}
+]]>
+</select>
+<update id="reNameReview" parameterType="review">
+<![CDATA[
+update review1 
+	set review_num=#{review_num}
+	where m_code=#{m_code} and review_num > #{review_num} and review_num <= #{review_num}+1
+]]>
+</update>
+
+
+
+
+<!-- 리뷰목록 출력 -->
+<!-- 페이징 처리 관련 -->
+<select id="getReviewList" resultType="review">
+<![CDATA[
+select * from (select rownum rn, b.* from (select * from review1 order by review_num desc)
+ b where rownum <=#{pageNum} * #{amount} ) where rn > (#{pageNum}-1)*#{amount} and m_code = #{m_code}
+]]>
+</select>
+<!-- 페이징 처리 관련 -->
+<select id="getListWithPaging" resultType="review">
+<![CDATA[
+select * from (select rownum rn, b.* from (select * from review1 order by review_num desc)
+ b where rownum <=#{pageNum} * #{amount} ) where rn > (#{pageNum}-1)*#{amount} and m_code = #{m_code}
+]]>
+</select>
+
+<select id="getTotalCount" resultType="int">
+<![CDATA[
+   select count(*) from review1 where m_code = #{m_code}
+]]>
+</select>
+
+
+
+<!-- 총 회원 수 출력 -->
+<select id="getReviewAvg" resultType="float">
+select round(AVG(star), 2) from review1 where m_code = #{m_code}
+</select>
+
+</mapper>

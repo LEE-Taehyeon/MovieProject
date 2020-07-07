@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+<!-- <mapper namespace="AdminDAO"> -->
+
+<!-- 내가 수정 -->
+<!-- 관리자 로그인 체크 -->
+<select id="loginCheck" resultType="admin">
+select * from admin where id = #{id} and password = #{password}
+</select>
+<!-- admin table에 등록된 adminID로는 일반 회원가입이 안되도록 하기위한 작업 -->
+<select id="adminIdChk" resultType="Integer">
+select count(*) from admin where id = #{id}
+</select>
+<!-- 관리자 생성시 일반유저와 같은 아이디 있는지 체크 -->
+<select id="customerIdChk" resultType="Integer">
+select count(*) from customer where id = #{id}
+</select>
+<!-- 관리자 생성 -->
+<insert id="insertAdmin" parameterType="admin">
+insert into admin values(#{id},#{password},#{name},#{power})
+</insert>
+
+
+
+
+<!-- 영화관 리스트 출력 -->
+<select id="getTheaterList1" resultType="theater">
+select * from theater order by theater_area
+</select>
+
+<select id="getTheaterList" resultType="theater">
+<![CDATA[
+select * from (select rownum rn, b.* from (select * from theater order by theater_area desc)
+ b where rownum <=#{pageNum} * #{amount} ) where rn > (#{pageNum}-1)*#{amount}
+]]>
+</select>
+<!-- 영화관 갯수 출력 -->
+<select id="getTheaterTotal" resultType="Integer">
+select count(*) from theater
+</select>
+<!-- 영화관 삭제 -->
+<delete id="deleteTheater" parameterType="String">
+delete from theater where theater_code=#{theater_code}
+</delete>
+<!-- 영화관 중복 확인 -->
+<select id="getTheater" parameterType="theater" resultType="theater">
+select * from theater where theater_area=#{theater_area} and theater_name=#{theater_name} and screen_name=#{screen_name}
+</select>
+<!-- 영화관 등록 -->
+<insert id="insertTheater" parameterType="theater">
+insert into theater(theater_code, theater_name, theater_area, screen_name, seat_code) values(#{theater_code}, #{theater_name}, #{theater_area}, #{screen_name}, #{seat_hidden_code})
+</insert>
+<!-- 좌석 중복저장 확인 -->
+<select id="doubleChkSeat" resultType="seatSave">
+select * from seat where seat_Code=#{seat_Code}
+</select>
+<!-- 좌석 등록 -->
+<insert id="seatSave" parameterType="seatSave">
+insert into seat(seat_Code, seat) values ( #{seat_Code}, #{seat})
+</insert>
+<!-- 상영시간표 등록시 , 이전에 등록된 상영시간표 확인(1) - 영화관 코드 출력 -->
+<select id="findTimetableList" resultType="timetable">
+select * from timetable where theater_code=#{theater_code} and screening_date=#{screening_date}
+</select>
+
+
+
+
+
+<!-- 상영관 등록 -->
+<insert id="insertScreen" parameterType="theater">
+insert into screen(screen_code, screen_name, theater_code, seats_total, screen_price, seat_code) values('A'||#{theater_code}, 'A관', #{theater_code}, 196, 10000,'A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 A11 A12 A13 A14 B1 B2 B3 B4 B5 B6 B7 B8 B9 B10 B11 B12 B13 B14 C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11 C12 C13 C14 D1 D2 D3 D4 D5 D6 D7 D8 D9 D10 D11 D12 D13 D14 E1 E2 E3 E4 E5 E6 E7 E8 E9 E10 E11 E12 E13 E14 F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12 F13 F14 G1 G2 G3 G4 G5 G6 G7 G8 G9 G10 G11 G12 G13 G14 H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 I1 I2 I3 I4 I5 I6 I7 I8 I9 I10 I11 I12 I13 I14 J1 J2 J3 J4 J5 J6 J7 J8 J9 J10 J11 J12 J13 J14 K1 K2 K3 K4 K5 K6 K7 K8 K9 K10 K11 K12 K13 K14 L1 L2 L3 L4 L5 L6 L7 L8 L9 L10 L11 L12 L13 L14 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 M12 M13 M14 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 N12 N13 N14')
+</insert>
+<insert id="insertScreenB" parameterType="theater">
+insert into screen(screen_code, screen_name, theater_code, seats_total, screen_price, seat_code) values('B'||#{theater_code}, 'B관', #{theater_code}, 164, 11000, 'A6 A7 A8 A9 A10 A11 A12 B6 B7 B8 B9 B10 B11 B12 C1 C2 C6 C7 C8 C9 C10 C11 C12 C13 C14 D1 D2 D6 D7 D8 D9 D10 D11 D12 D13 D14 E1 E2 E3 E4 E5 E6 E7 E8 E9 E10 E11 E12 E13 E14 F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12 F13 F14 G1 G2 G3 G4 G5 G6 G7 G8 G9 G10 G11 G12 G13 G14 H1 H2 H3 H4 H5 H6 H7 H8 H9 H10 H11 H12 H13 H14 I3 I4 I5 I6 I7 I8 I9 I10 I11 I12 I13 I14 J3 J4 J5 J6 J7 J8 J9 J10 J11 J12 J13 J14 K3 K4 K5 K6 K7 K8 K9 K10 K11 K12 K13 K14 L3 L4 L5 L6 L7 L8 L9 L10 L11 L12 L13 L14 M3 M4 M5 M6 M7 M8 M9 M10 M11 M12 M13 M14 N3 N4 N5 N6 N7 N8 N9 N10 N11 N12 N13 N14')
+</insert>
+<!-- 상영시간표 리스트 출력 -->
+<select id="getTimetableList" parameterType="timetable" resultType="timetable">
+select * from timetable
+     <where> 
+      <if test="timetable_code != null">
+       and timetable_code=#{timetable_code}
+            </if>
+     </where>
+     order by start_time
+</select>
+<!-- 상영시간표 갯수 출력 -->
+<select id="getTimetableTotal" resultType="Integer">
+select count(*) from timetable
+</select>
+<!-- 상영시간표 삭제 -->
+<delete id="deleteTimetable" parameterType="String">
+delete from timetable where timetable_code=#{timetable_code}
+</delete>
+<!-- 상영관 목록 -->
+<select id="getScreenList" parameterType="theater" resultType="theater">
+select * from theater where theater_name=#{theater_name}
+</select>
+<!-- 영화 정보 -->
+<select id="getMovie" parameterType="movie" resultType="movie">
+select * from movies where m_code=#{m_code}
+</select>
+<!-- 상영시간표 등록 -->
+<insert id="insertTimetable" parameterType="timetable">
+INSERT INTO timetable(timetable_code, m_code, theater_code, screen_code, screening_date, start_time, m_name, m_poster, theater_name, theater_area, screen_name) VALUES (#{timetable_code}, #{m_code}, #{theater_code}, #{screen_code}, #{screening_date}, #{start_time}, #{m_name}, #{m_poster}, #{theater_name}, #{theater_area}, #{screen_name})
+</insert>
+<!-- 상영관 정보 -->
+<select id="getScreen" parameterType="screen" resultType="screen">
+select * from screen where screen_code=#{screen_code}
+</select>
+<!-- 좌석 등록 -->
+<insert id="insertSeat" parameterType="seat">
+insert into seat(seat_code, timetable_code, m_code, theater_code, screen_code) values ( #{seat_code}, #{timetable_code}, #{m_code}, #{theater_code}, #{screen_code})
+</insert>
+
+<!-- 회원관리 -->
+<!-- 회원목록 출력 -->
+<!-- 페이징 처리 관련 -->
+<select id="getCustomerList" resultType="customer">
+<![CDATA[
+select * from (select rownum rn, b.* from (select * from customer order by name)
+ b where rownum <=#{pageNum} * #{amount} ) where rn > (#{pageNum}-1)*#{amount}
+]]>
+</select>
+<!-- 페이징 처리 관련 -->
+<select id="getListWithPaging" resultType="customer">
+<![CDATA[
+select * from (select rownum rn, b.* from (select * from customer order by name)
+ b where rownum <=#{pageNum} * #{amount} ) where rn > (#{pageNum}-1)*#{amount}
+]]>
+</select>
+
+<select id="getTotalCount" resultType="int">
+<![CDATA[
+   select count(*) from customer
+]]>
+</select>
+
+
+
+<!-- 총 회원 수 출력 -->
+<select id="getCustomerTotal" resultType="Integer">
+select count(*) from customer
+</select>
+<!-- 회원 삭제 -->
+<delete id="deleteCustomer" parameterType="String">
+delete from customer where id=#{id}
+</delete>
+
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="movie">
+
+<select id="getMovieList" resultType="movie">
+<![CDATA[
+select * from (select rownum rn, b.* from (select * from movies order by m_code desc)
+ b where rownum <=#{pageNum} * #{amount} ) where rn > (#{pageNum}-1)*#{amount}
+]]>
+</select>
+
+<select id="getMovie" resultType="movie">
+select * from movies where m_code=#{m_code}
+</select>
+
+<insert id="insertMovie" parameterType="movie">
+<![CDATA[
+INSERT INTO movies VALUES (#{m_code}, #{m_name}, #{m_director}, #{m_actor}, #{m_company}, #{m_time},#{m_playDate}, #{m_description}, #{m_posterImg})
+]]>
+</insert>
+
+<update id="updateMovie" parameterType="movie">
+<![CDATA[
+update movies 
+     set m_name=#{m_name},
+         m_director=#{m_director}, 
+         m_actor=#{m_actor},
+         m_company=#{m_company},
+         m_time=#{m_time},
+         m_playDate=#{m_playDate},
+         m_description=#{m_description},
+         m_posterImg=#{m_posterImg}
+   where m_code=#{m_code}
+]]>
+</update>
+<delete id="deleteMovie" parameterType="String">
+delete from movies where m_code=#{m_code}
+</delete>
+
+<select id="getCode" resultType="movie">
+select * from movies where m_code=#{m_code}
+</select>
+
+<select id="getListWithPaging" resultType="movie">
+<![CDATA[
+select * from (select rownum rn, b.* from (select * from movies order by m_code desc)
+ b where rownum <=#{pageNum} * #{amount} ) where rn > (#{pageNum}-1)*#{amount}
+]]>
+</select>
+
+<select id="getTotalCount" resultType="int">
+<![CDATA[
+   select count(*) from movies
+]]>
+</select>
+
+
+<!-- 해당 m_code에 맞는 movielist출력 -->
+<select id="getMovieListFromMcode" parameterType="String" resultType="movie">
+select * from movies where m_code=#{m_code}
+</select>
+
+</mapper>

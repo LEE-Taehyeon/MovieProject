@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+	    <typeAlias type="com.my.movie.booking.BookingVO" alias="booking"/>
+		<typeAlias type="com.my.movie.movie.MovieVO" alias="movie"/>
+		<typeAlias type="com.my.movie.admin.TheaterVO" alias="theater"/>
+		<typeAlias type="com.my.movie.admin.TimetableVO" alias="timetable"/>
+
+		<typeAlias type="com.my.movie.admin.SeatVO" alias="seat"/>
+		
+		<typeAlias type="com.my.movie.admin.SeatSaveVO" alias="seatSave" />
+		<typeAlias type="com.my.movie.admin.AdminVO" alias="admin"/>
+		<typeAlias type="com.my.movie.admin.ScreenVO" alias="screen"/>
+		<typeAlias type="com.my.movie.user.CustomerVO" alias="customer" />
+		<typeAlias type="com.my.movie.review.ReviewVO" alias="review" />
+		<typeAlias type="com.my.movie.theater.TheaterVO" alias="customerTheater" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="mappings/booking-mapper.xml" />
+		<mapper resource="mappings/Mapper.xml" />
+		<mapper resource="mappings/Mapper2.xml" />
+		<mapper resource="mappings/Mapper3.xml" />
+		<mapper resource="mappings/Mapper4.xml" />
+		<mapper resource="mappings/Mapper5.xml" />
+	</mappers>
+</configuration>
