@@ -121,6 +121,40 @@ function timetableList(){
 		});
 	}		
 }
+
+function endTimeCal(){
+	var movie_code = document.getElementById('m_code').value;
+	var start_time = document.getElementById('time').value;
+	var param = 'm_code='+movie_code;
+	var end_time = 0;
+	
+	if(start_time==""){
+		alert('상영 시작시간을 입력하세요.');
+	}else{
+		var arr = start_time.split(':');
+		
+		$.ajax({
+			url : '/movie/CalEndTime',
+			data : param,
+			success : function(result) {
+				var hour = Math.floor(result/60);
+				var minute = result%60;
+				var totalMinute = +arr[1]+minute;
+
+				if(totalMinute>=60){
+					hour += Math.floor(totalMinute/60);
+					totalMinute %= 60;
+				}
+				if(totalMinute<10){
+					totalMinute = '0'+totalMinute;
+				}
+				end_time = +arr[0]+hour+":"+totalMinute;
+				alert(end_time);
+				document.getElementById('endTime').value = end_time;
+			}
+		});
+	}
+}
 </script>
 </head>
 <body>
@@ -199,7 +233,9 @@ function timetableList(){
 			<div class="form-group row">
 				<label class="col-sm-2">영화 상영시간</label>
 				<div class="col-sm-3">
-					<input type="time" id="time" name="time" required> <!-- min="13:00:00" max="15:00:00" -->
+					<input type="time" id="time" name="time" min="06:00" required>~
+					<input type="time" id="endTime" name="endTime" required readonly>
+					<button type="button" onclick="endTimeCal()">상영시간 계산</button>
 					<button type="button" onclick="timetable_chk()">상영시간표 체크</button>
 				</div>
 			</div>

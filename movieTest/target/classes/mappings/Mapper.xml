@@ -60,7 +60,7 @@ select * from seat where seat_Code=#{seat_Code}
 <insert id="seatSave" parameterType="seatSave">
 insert into seat(seat_Code, seat) values ( #{seat_Code}, #{seat})
 </insert>
-<!-- 상영시간표 등록시 , 이전에 등록된 상영시간표 확인(1) - 영화관 코드 출력 -->
+<!-- 상영시간표 등록시 , 이전에 등록된 상영시간표 확인(1) -->
 <select id="findTimetableList" resultType="timetable">
 select * from timetable where theater_code=#{theater_code} and screening_date=#{screening_date}
 </select>

@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -210,7 +210,19 @@ public class AdminController {
 		System.out.println("찾은 vo:"+vo);
 		return vo1;
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/CalEndTime")
+	public int CalEndTime(MovieVO vo) {
+		MovieVO vo1 = adminService.getMovie(vo);
+		int running_time = Integer.valueOf(vo1.getM_time());
 
+		return running_time;
+	}
+	
+	
+	
+	//-----------------------------------------------------------------------------------------------------------------//
 	
 	
 	// 상영시관표 관리 - 상영시간표 리스트 출력
