@@ -44,6 +44,9 @@ public interface AdminService {
 	//상영시간표 등록시 , 이전에 등록된 상영시간표 확인
 	public List<TimetableVO> findTimetableList(TimetableVO vo);
 	
+	//상영시간표 관리 - 중복된 상영시간표 있는지 조회
+	public List<TimetableVO> getTimetableChk(TimetableVO vo);
+	
 	
 	public void insertTheater(TheaterVO vo);
 	
@@ -83,6 +86,8 @@ public interface AdminService {
 	
 	//회원 삭제
 	public void deleteCustomer(String id);
+
+	
 
 	
 

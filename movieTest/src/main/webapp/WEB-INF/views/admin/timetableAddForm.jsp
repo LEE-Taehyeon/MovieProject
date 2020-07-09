@@ -82,6 +82,8 @@ function timetableList(){
 	var theater_area = document.getElementById('theater_area').value;
 	var theater_nameA = document.getElementById('theater_nameA').value;
 	var screen_nameA = document.getElementById('screen_nameA').value;
+	//지역, 영화관, 상영관 선택 안했을 시 alert창 띄우기 위함
+	
 	var theater_code = document.getElementById('screen_nameA').value;
 	var screening_date = document.getElementById('date').value;
 	
@@ -140,6 +142,7 @@ function endTimeCal(){
 				var hour = Math.floor(result/60);
 				var minute = result%60;
 				var totalMinute = +arr[1]+minute;
+				var totalHour = +arr[0]+hour;
 
 				if(totalMinute>=60){
 					hour += Math.floor(totalMinute/60);
@@ -148,9 +151,58 @@ function endTimeCal(){
 				if(totalMinute<10){
 					totalMinute = '0'+totalMinute;
 				}
-				end_time = +arr[0]+hour+":"+totalMinute;
+				if(totalHour<10){
+					totalHour = '0'+totalHour;
+				}
+				end_time = totalHour+":"+totalMinute;
 				alert(end_time);
 				document.getElementById('endTime').value = end_time;
+			}
+		});
+	}
+}
+
+function timetable_chk(){
+	var theater_code = document.getElementById('screen_nameA').value;
+	var screening_date = document.getElementById('date').value;
+	var start_timeStr = document.getElementById('time').value;
+	var end_timeStr = document.getElementById('endTime').value;
+	
+	
+	var year = screening_date.substr(0,4);
+	var month = screening_date.substr(5,2);
+	var day = screening_date.substr(8,2);
+	
+	var hour = start_timeStr.substr(0,2);
+	var minute = start_timeStr.substr(3,2);
+	var start_time = new Date(year, month, day, hour, minute);
+	
+	var hour1 = end_timeStr.substr(0,2);
+	var minute1 = end_timeStr.substr(3,2);
+	var end_time = new Date(year, month, day, hour1, minute1);
+	
+	
+	alert(typeof start_time);
+	alert(start_time);
+	alert(end_time);
+	var param = 'theater_code='+theater_code+'&screening_date='+screening_date+'&start_time='+start_time+'&end_time='+end_time;
+
+	if(theater_code==""){
+		alert('지역, 영화관, 상영관 중 빠트린 것을 입력하세오.');
+		return false;
+	}else if(screening_date==""){
+		alert('날짜를 입력하세요.');
+		return false;
+	}else if(start_time==""){
+		alert('영화 상영 시작시간을 입력하세요');
+		return false;
+	}else{
+		alert('sfafe');
+		$.ajax({
+			url : '/movie/TimetableChk',
+			data : param,
+			success : function(result) {
+				alert(result);
 			}
 		});
 	}
@@ -164,7 +216,7 @@ function endTimeCal(){
 		int num2 = (int) (Math.random() * 90) + 10;
 		int num3 = (int) (Math.random() * 90) + 10;
 
-		String t_Code = "T" + num1 + num2 + num3;
+		String t_Code = "TT" + num1 + num2 + num3;
 	%>
 	
 	<div class="jumbotrons">

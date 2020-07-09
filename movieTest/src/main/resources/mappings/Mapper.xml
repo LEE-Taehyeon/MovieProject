@@ -64,6 +64,12 @@ insert into seat(seat_Code, seat) values ( #{seat_Code}, #{seat})
 <select id="findTimetableList" resultType="timetable">
 select * from timetable where theater_code=#{theater_code} and screening_date=#{screening_date}
 </select>
+<!-- 상영시간표 관리 - 중복된 상영시간표 있는지 조회 -->
+<select id="getTimetableChk" resultType="timetable">
+select * from (select * from timetable where theater_code=#{theater_code} and screening_date=#{screening_date})
+where TIMESTAMPDIFF(minute, '#{start_time}', 'end_time')>=0 and TIMESTAMPDIFF(minute, 'start_time', '#{end_time}')>=0
+</select>
+
 
 
 

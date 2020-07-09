@@ -103,6 +103,12 @@ public class AdminServiceImpl implements AdminService {
 		return adminDAO.findTimetableList(vo);
 	}
 	
+	// 상영시간표 관리 - 중복된 상영시간표 있는지 조회
+	@Override
+	public List<TimetableVO> getTimetableChk(TimetableVO vo) {
+		return adminDAO.getTimetableChk(vo);
+	}
+	
 	
 	
 	
@@ -202,6 +208,8 @@ public class AdminServiceImpl implements AdminService {
 	public void deleteCustomer(String id) {
 		adminDAO.deleteCustomer(id);
 	}
+
+	
 
 	
 

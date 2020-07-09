@@ -211,6 +211,7 @@ public class AdminController {
 		return vo1;
 	}
 	
+	//상영시간표 관리 - 영화 상영 종료시간 계산
 	@ResponseBody
 	@RequestMapping(value="/CalEndTime")
 	public int CalEndTime(MovieVO vo) {
@@ -218,6 +219,17 @@ public class AdminController {
 		int running_time = Integer.valueOf(vo1.getM_time());
 
 		return running_time;
+	}
+	
+	//상영시간표 관리 - 중복된 상영시간표 있는지 조회
+	@ResponseBody
+	@RequestMapping(value="/TimetableChk")
+	public List<TimetableVO> TimetableChk(TimetableVO vo) {
+		System.out.println("TimetableChk 찾기 전 vo:"+vo);
+		List<TimetableVO> vo1 = adminService.getTimetableChk(vo);
+		System.out.println("TimetableChk 찾기 후 vo1:"+vo1);
+
+		return vo1;
 	}
 	
 	

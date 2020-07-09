@@ -77,14 +77,13 @@ public class AdminDAO {
 	public List<SeatSaveVO> doubleChkSeat(SeatSaveVO vo) {
 		return mybatis.selectList("admin.doubleChkSeat", vo);
 	}
-	//영화관 등록시 좌석 저장
+
+	// 영화관 등록시 좌석 저장
 	public void seatSave(SeatSaveVO vo) {
 		mybatis.insert("admin.seatSave", vo);
-		
+
 	}
 
-	
-	
 	// 상영관 등록(A관)
 	public void insertScreen(TheaterVO vo) {
 		mybatis.insert("admin.insertScreen", vo);
@@ -134,20 +133,23 @@ public class AdminDAO {
 		return mybatis.selectOne("admin.getScreen", vo2);
 	}
 
-	
 	// 좌석 등록
 	public void insertSeat(SeatVO vo3) {
 		mybatis.insert("admin.insertSeat", vo3);
 	}
-	
-	//상영시간표 등록시 , 이전에 등록된 상영시간표 확인(1)
+
+	// 상영시간표 등록시 , 이전에 등록된 상영시간표 확인(1)
 	public List<TimetableVO> findTimetableList(TimetableVO vo) {
 		return mybatis.selectList("admin.findTimetableList", vo);
 	}
-	
-	
-	
 
+	// 상영시간표 관리 - 중복된 상영시간표 있는지 조회
+	public List<TimetableVO> getTimetableChk(TimetableVO vo) {
+		return mybatis.selectList("admin.getTimetableChk", vo);
+	}
+
+	
+	
 	// 회원관리
 	// 회원목록 출력, 페이징처리 관련 작업
 	public List<CustomerVO> getCustomerList(Criteria cri) {
@@ -173,9 +175,5 @@ public class AdminDAO {
 	public void deleteCustomer(String id) {
 		mybatis.delete("admin.deleteCustomer", id);
 	}
-
-	
-
-	
 
 }
