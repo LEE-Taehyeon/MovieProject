@@ -162,7 +162,9 @@ function endTimeCal(){
 	}
 }
 
-function timetable_chk(){
+
+//start_time, end_time 의 타입이 vo와 연동이 안돼서 구현을 못하겠음
+/*function timetable_chk(){ 
 	var theater_code = document.getElementById('screen_nameA').value;
 	var screening_date = document.getElementById('date').value;
 	var start_timeStr = document.getElementById('time').value;
@@ -206,7 +208,7 @@ function timetable_chk(){
 			}
 		});
 	}
-}
+} */
 </script>
 </head>
 <body>
@@ -288,7 +290,7 @@ function timetable_chk(){
 					<input type="time" id="time" name="time" min="06:00" required>~
 					<input type="time" id="endTime" name="endTime" required readonly>
 					<button type="button" onclick="endTimeCal()">상영시간 계산</button>
-					<button type="button" onclick="timetable_chk()">상영시간표 체크</button>
+					<!-- <button type="button" onclick="timetable_chk()">상영시간표 체크</button> -->
 				</div>
 			</div>
 			<!-- hidden -->
