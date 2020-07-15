@@ -1,7 +1,5 @@
 package com.my.movie.movie;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class MovieVO {
 	private String m_code; 
 	private String  m_name; 

@@ -224,7 +224,7 @@
 	<div class="wrapper"
 		style="width: 100%; max-width: 1440px; margin: 0 auto;">
 		<div class="container">
-		<form action="TheaterInsert" class="form-horizontal" method="post">
+		<form action="/movie/TheaterInsert" class="form-horizontal" method="post">
 			<div class="form-group row">
 				<label class="col-sm-2">영화관코드</label>
 				<div class="col-sm-6">

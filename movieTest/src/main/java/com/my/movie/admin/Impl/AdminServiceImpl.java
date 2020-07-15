@@ -102,6 +102,12 @@ public class AdminServiceImpl implements AdminService {
 	public List<TimetableVO> findTimetableList(TimetableVO vo) {
 		return adminDAO.findTimetableList(vo);
 	}
+	//해당 상영관의 영화 제목, 영화 포스터 영화DB에서 가져오기
+	@Override
+	public List<MovieVO> findMovieInfoList(List<TimetableVO> vo) {
+		return adminDAO.findMovieInfoList(vo);
+	}
+	
 	
 	// 상영시간표 관리 - 중복된 상영시간표 있는지 조회
 	@Override
@@ -109,7 +115,29 @@ public class AdminServiceImpl implements AdminService {
 		return adminDAO.getTimetableChk(vo);
 	}
 	
+	// 상영시간표 관리 - 상영시간표 등록
+	@Override
+	public void insertTimetable(TimetableVO vo) {
+		adminDAO.insertTimetable(vo);
+	}
 	
+	// 상영시간표 목록 출력
+	@Override
+	public List<TimetableVO> getTimetableList(TimetableVO vo) {
+		return adminDAO.getTimetableList(vo);
+	}
+	
+	// 상영시간표 리스트 출력 - 영화관 코드로 지역, 영화관, 상영관 가져오기
+	@Override
+	public List<TheaterVO> getTheaterList(List<TimetableVO> vo) {
+		return adminDAO.getTheaterList(vo);
+	}
+	
+	// 상영시간표 리스트 출력 - 영화 코드로 영화제목, 포스터 가져오기
+	@Override
+	public List<MovieVO> getMovieList(List<TheaterVO> vo) {
+		return adminDAO.getMovieList(vo);
+	}
 	
 	
 	
@@ -126,12 +154,6 @@ public class AdminServiceImpl implements AdminService {
 	public void insertScreenB(TheaterVO vo) {
 		adminDAO.insertScreenB(vo);
 
-	}
-
-	// 상영시간표 목록 출력
-	@Override
-	public List<TimetableVO> getTimetableList(TimetableVO vo) {
-		return adminDAO.getTimetableList(vo);
 	}
 
 	// 상영시간표 갯수
@@ -159,12 +181,7 @@ public class AdminServiceImpl implements AdminService {
 		return adminDAO.getMovie(vo1);
 	}
 
-	// 상영시간표 등록
-	@Override
-	public void insertTimetable(TimetableVO vo) {
-		adminDAO.insertTimetable(vo);
 
-	}
 
 	// 상영관 정보
 	@Override
@@ -208,6 +225,12 @@ public class AdminServiceImpl implements AdminService {
 	public void deleteCustomer(String id) {
 		adminDAO.deleteCustomer(id);
 	}
+
+	
+
+	
+
+	
 
 	
 

@@ -39,6 +39,8 @@ import com.my.movie.user.CustomerService;
 import com.my.movie.user.CustomerVO;
 import com.my.movie.user.Impl.CustomerDAO;
 
+import jdk.nashorn.internal.ir.RuntimeNode.Request;
+
 /**
  * Handles requests for the application home page.
  */
@@ -190,61 +192,83 @@ public class AdminController {
 		System.out.println("좌석 중복확인");
 		System.out.println(vo.getSeat_Code());
 		System.out.println(vo.getSeat());
-		
+
 		List<SeatSaveVO> vo1 = adminService.doubleChkSeat(vo);
-		if(vo1.isEmpty()) {
+		if (vo1.isEmpty()) {
 			adminService.seatSave(vo);
-		}	
-		
-		System.out.println("찾은 vovovovo:"+vo1);
+		}
+
+		System.out.println("찾은 vovovovo:" + vo1);
 
 		return vo1;
 	}
-	
-	//상영시간표 등록시 , 이전에 등록된 상영시간표 확인
+
+	// 상영시간표 등록시 , 이전에 등록된 상영시간표 확인
 	@ResponseBody
-	@RequestMapping(value="/FindTimetableList")
-	public List<TimetableVO> FindTimetableList(TimetableVO vo) {
-		System.out.println("vo:"+vo);
+	@RequestMapping(value = "/FindTimetableList")
+	public Model FindTimetableList(Model model, TimetableVO vo) {
+		System.out.println("vo:" + vo);
 		List<TimetableVO> vo1 = adminService.findTimetableList(vo);
-		System.out.println("찾은 vo:"+vo);
-		return vo1;
+		model.addAttribute("findTimetableList", vo1);
+		System.out.println("vo1:"+vo1);
+
+		List<MovieVO> vo2 = adminService.findMovieInfoList(vo1);
+		System.out.println("vo2:"+vo2);
+		model.addAttribute("findMovieInfoList", vo2);
+
+		return model;
 	}
-	
-	//상영시간표 관리 - 영화 상영 종료시간 계산
+
+	// 상영시간표 관리 - 영화 상영 종료시간 계산
 	@ResponseBody
-	@RequestMapping(value="/CalEndTime")
+	@RequestMapping(value = "/CalEndTime")
 	public int CalEndTime(MovieVO vo) {
 		MovieVO vo1 = adminService.getMovie(vo);
 		int running_time = Integer.valueOf(vo1.getM_time());
 
 		return running_time;
 	}
-	
-	//상영시간표 관리 - 중복된 상영시간표 있는지 조회
+
+	// 상영시간표 관리 - 중복된 상영시간표 있는지 조회
 	@ResponseBody
-	@RequestMapping(value="/TimetableChk")
+	@RequestMapping(value = "/TimetableChk")
 	public List<TimetableVO> TimetableChk(TimetableVO vo) {
-		System.out.println("TimetableChk 찾기 전 vo:"+vo);
+		System.out.println("TimetableChk 찾기 전 vo:" + vo);
 		List<TimetableVO> vo1 = adminService.getTimetableChk(vo);
-		System.out.println("TimetableChk 찾기 후 vo1:"+vo1);
+		System.out.println("TimetableChk 찾기 후 vo1:" + vo1);
 
 		return vo1;
 	}
-	
-	
-	
-	//-----------------------------------------------------------------------------------------------------------------//
-	
-	
+
+	// 상영시간표 관리 - 상영시간표 등록
+	@RequestMapping(value = "/InsertTimetable")
+	public String InsertTimetable(TimetableVO vo) {
+
+		System.out.println("찾기 전 vo:::::" + vo);
+		adminService.insertTimetable(vo);
+		System.out.println("찾은 후 vo:::::" + vo);
+		return "redirect:/movie/manageTimetable";
+	}
+
 	// 상영시관표 관리 - 상영시간표 리스트 출력
 	@RequestMapping(value = "/manageTimetable")
 	public String manageTimetable(Model model, TimetableVO vo) {
-		model.addAttribute("timetablelist", adminService.getTimetableList(vo));
+		List<TimetableVO> timetablelist = adminService.getTimetableList(vo);
+		model.addAttribute("timetablelist", timetablelist);
+		System.out.println("Sdfsfsd"+timetablelist);
+		
+		//List<TheaterVO> theaterlist = adminService.getTheaterList(timetablelist);
+		//model.addAttribute("theaterlist", theaterlist);
+		
+		//model.addAttribute("movielist", adminService.getMovieList(theaterlist));
 		model.addAttribute("total_timetable", adminService.getTimetableTotal());
 		System.out.println("model" + model);
 		return "/admin/adminTimetable";
 	}
+
+	
+	
+	// -----------------------------------------------------------------------------------------------------------------//
 
 	// 상영시간표 관리 - 상영시간표 삭제
 	@RequestMapping(value = "/TimetableDelete")
@@ -286,43 +310,37 @@ public class AdminController {
 		System.out.println("screenList:" + screenList);
 		return screenList;
 	}
-/*
-	// 상영시간표 등록 처리
-	@RequestMapping(value = "/TimetableInsert")
-	public String TimetableInsert(TimetableVO vo, HttpServletRequest request, MovieVO vo1, ScreenVO vo2, SeatVO vo3)
-			throws ParseException {
-		System.out.println("TimetableVO:" + vo);
 
-		String date = (String) request.getParameter("date");
-		String time = (String) request.getParameter("time");
-		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
-		Date screening_date = sdfDate.parse(date);
-		SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-ddHH:mm");
-		Date start_time = sdfTime.parse(date + time);// 상영 날짜 및 시각 date타입 변환
-
-		vo1 = adminService.getMovie(vo1);// 영화테이블에서 m_name, m_posterImg 가져오기
-
-		vo.setM_name(vo1.getM_name());
-		vo.setM_poster(vo1.getM_posterImg());
-		vo.setScreening_date(screening_date);
-		vo.setStart_time(start_time);//
-
-		adminService.insertTimetable(vo);// 상영시간표 추가
-
-		// 좌석테이블 추가하는 메소드 필요
-		vo2 = adminService.getScreen(vo2);// 상영관 정보 가져오기
-		System.out.println("seatVO:" + vo3);
-		String code = vo2.getSeat_code();
-		List<String> list = Arrays.asList(code.split(" "));
-		for (Object obj : list) {
-			String seat_code = (String) obj;
-			vo3.setSeat_code(seat_code);
-			adminService.insertSeat(vo3);
-		}
-
-		return "redirect:/movie/manageTimetable";
-
-	}
-	*/
+	/*
+	 * // 상영시간표 등록 처리
+	 * 
+	 * @RequestMapping(value = "/TimetableInsert") public String
+	 * TimetableInsert(TimetableVO vo, HttpServletRequest request, MovieVO vo1,
+	 * ScreenVO vo2, SeatVO vo3) throws ParseException {
+	 * System.out.println("TimetableVO:" + vo);
+	 * 
+	 * String date = (String) request.getParameter("date"); String time = (String)
+	 * request.getParameter("time"); SimpleDateFormat sdfDate = new
+	 * SimpleDateFormat("yyyy-MM-dd"); Date screening_date = sdfDate.parse(date);
+	 * SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-ddHH:mm"); Date
+	 * start_time = sdfTime.parse(date + time);// 상영 날짜 및 시각 date타입 변환
+	 * 
+	 * vo1 = adminService.getMovie(vo1);// 영화테이블에서 m_name, m_posterImg 가져오기
+	 * 
+	 * vo.setM_name(vo1.getM_name()); vo.setM_poster(vo1.getM_posterImg());
+	 * vo.setScreening_date(screening_date); vo.setStart_time(start_time);//
+	 * 
+	 * adminService.insertTimetable(vo);// 상영시간표 추가
+	 * 
+	 * // 좌석테이블 추가하는 메소드 필요 vo2 = adminService.getScreen(vo2);// 상영관 정보 가져오기
+	 * System.out.println("seatVO:" + vo3); String code = vo2.getSeat_code();
+	 * List<String> list = Arrays.asList(code.split(" ")); for (Object obj : list) {
+	 * String seat_code = (String) obj; vo3.setSeat_code(seat_code);
+	 * adminService.insertSeat(vo3); }
+	 * 
+	 * return "redirect:/movie/manageTimetable";
+	 * 
+	 * }
+	 */
 
 }

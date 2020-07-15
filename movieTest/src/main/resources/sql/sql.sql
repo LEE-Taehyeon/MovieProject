@@ -2,11 +2,15 @@ CREATE TABLE customer (ID varchar2(50) NOT NULL, password varchar2(50) NOT NULL,
 CREATE TABLE admin (ID varchar2(50) NOT NULL, password varchar2(50) NOT NULL, name varchar2(50) NOT NULL, power number(10) NOT NULL, PRIMARY KEY (ID));
 CREATE TABLE theater (theater_code varchar2(10) NOT NULL, theater_name varchar2(30) NOT NULL, theater_area varchar2(30) NOT NULL, screen_name varchar2(30) NOT NULL, seat_code varchar2(10) NOT NULL);
 CREATE TABLE screen (screen_code varchar2(10) NOT NULL, screen_name varchar2(20) NOT NULL, theater_code varchar2(3) NOT NULL, seat_code varchar2(16) NOT NULL, seats_total number(3) NOT NULL, screen_price number(10) NOT NULL);
-CREATE TABLE timetable (timetable_code varchar2(10) NOT NULL, m_code number(10) NOT NULL, theater_code varchar2(10) NOT NULL, screening_date date NOT NULL, start_time date NOT NULL, end_time date NOT NULL, m_name varchar2(50) NOT NULL, m_poster varchar2(50) NOT NULL, theater_name varchar2(30) NOT NULL, theater_area varchar2(20) NOT NULL, screen_name varchar2(20) NOT NULL);
+
+CREATE TABLE timetable (timetable_code varchar2(10) NOT NULL, theater_code varchar2(10) NOT NULL, screening_date date NOT NULL, m_code varchar2(10) NOT NULL, start_time varchar2(10) NOT NULL, end_time varchar2(10) NOT NULL);
+
 CREATE TABLE movies (m_code varchar2(10) NOT NULL, m_name varchar2(50) NOT NULL, m_director varchar2(20) NOT NULL, m_actor varchar2(100) NOT NULL, m_company varchar2(50) NOT NULL, m_time varchar2(20) NOT NULL, m_playDate varchar2(30) NOT NULL, m_description clob NOT NULL, m_poster varchar2(50) NOT NULL);
 CREATE TABLE booking (booking_code varchar2(10) NOT NULL, customer_ID varchar2(50) NOT NULL, customer_name varchar2(50) NOT NULL, m_name varchar2(20) NOT NULL, theater_name varchar2(30) NOT NULL, screen_name varchar2(20) NOT NULL, seat_code varchar2(10) NOT NULL, seats_num number(2) NOT NULL, screening_date date NOT NULL, book_date date DEFAULT sysdate NOT NULL, booking_price number(10) DEFAULT 0 NOT NULL);
 CREATE TABLE seat (seat_code varchar2(10), timetable_code varchar2(10), booking_code varchar2(20) NOT NULL, movie_code varchar2(10), theater_code varchar2(10), screen_code varchar2(10), isbooked number(1) DEFAULT 0);
 CREATE TABLE seat (seat_Code varchar2(10) NOT NULL, seat clob NOT NULL);
+
+
 
 INSERT INTO customer(ID, password, name, phone, gender, birth, mail, zipcode, address, addressdetail, extraAddress, regdate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 INSERT INTO admin(ID, password, name) VALUES (?, ?, ?);
@@ -28,8 +32,12 @@ drop table customer;
 drop table admin;
 drop table theater;
 drop table seat;
+drop table timetable;
 select * from seat;
 select * from THEATER;
+
+select m_name, m_posterimg, start_time, end_time from movies, TIMETABLE where movies.m_code=timetable.m_code;
+
 delete from seat where seat_code = 'S854412';
 
 리뷰테이블 생성

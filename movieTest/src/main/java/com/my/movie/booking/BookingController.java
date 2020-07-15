@@ -63,7 +63,7 @@ public class BookingController {
 		model.addAttribute("seatList", bookingService.getSeat(timetable_code));//예약된 좌석 가져오기
 		System.out.println("model:"+model);
 		TimetableVO vo = (TimetableVO)bookingService.getTimetable(timetable_code);
-		model.addAttribute("screen", bookingService.getScreen(vo.getScreen_code()));
+		model.addAttribute("screen", bookingService.getScreen(vo.getTheater_code()));
 		System.out.println("model:"+model);
 		return "/booking/selectSeat";
 	}

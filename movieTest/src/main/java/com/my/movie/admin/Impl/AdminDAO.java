@@ -95,11 +95,6 @@ public class AdminDAO {
 
 	}
 
-	// 상영시간표 목록
-	public List<TimetableVO> getTimetableList(TimetableVO vo) {
-		return mybatis.selectList("admin.getTimetableList");
-	}
-
 	// 상영시간표 갯수
 	public int getTimetableTotal() {
 		return mybatis.selectOne("admin.getTimetableTotal");
@@ -142,12 +137,32 @@ public class AdminDAO {
 	public List<TimetableVO> findTimetableList(TimetableVO vo) {
 		return mybatis.selectList("admin.findTimetableList", vo);
 	}
+	// 해당 상영관의 영화 제목, 영화 포스터 영화DB에서 가져오기
+	public List<MovieVO> findMovieInfoList(List<TimetableVO> vo) {
+		return mybatis.selectList("admin.findMovieInfoList", vo);
+	}
 
 	// 상영시간표 관리 - 중복된 상영시간표 있는지 조회
 	public List<TimetableVO> getTimetableChk(TimetableVO vo) {
 		return mybatis.selectList("admin.getTimetableChk", vo);
 	}
 
+	// 상영시간표 리스트 출력 - 영화관 코드로 지역, 영화관, 상영관 가져오기
+	public List<TheaterVO> getTheaterList(List<TimetableVO> vo) {
+		return mybatis.selectList("admin.getTheaterList_in_TimetableList", vo);
+	}
+
+	// 상영시간표 리스트 출력 - 영화 코드로 영화제목, 포스터 가져오기
+	public List<MovieVO> getMovieList(List<TheaterVO> vo) {
+		return mybatis.selectList("admin.getMovieList_in_TimetableList", vo);
+	}
+
+	// 상영시간표 리스트 출력
+	public List<TimetableVO> getTimetableList(TimetableVO vo) {
+		return mybatis.selectList("admin.getTimetableList");
+	}
+
+	
 	
 	
 	// 회원관리
@@ -175,5 +190,7 @@ public class AdminDAO {
 	public void deleteCustomer(String id) {
 		mybatis.delete("admin.deleteCustomer", id);
 	}
+
+	
 
 }

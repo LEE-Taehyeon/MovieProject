@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="timetablelist" value="${timetablelist}" scope="request"/>
-<c:set var="total_timetable" value="${total_timetable}" scope="request"/>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<c:set var="timetablelist" value="${timetablelist}" scope="request" />
+<c:set var="theaterlist" value="${theaterlist}" scope="request" />
+<c:set var="movielist" value="${movielist}" scope="request" />
+<c:set var="total_timetable" value="${total_timetable}" scope="request" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,11 +106,11 @@
 	<h1>상영시간표관리</h1>
 	<!-- 출력리스트 헤드부분 -->
 	<div style="padding-top: 50px;">
-		<div style="float:right">전체 상영시간표수: ${total_timetable}개</div>
+		<div style="float: right">전체 상영시간표수: ${total_timetable}개</div>
 		<table class="table">
 			<tr>
-				<th style="text-align: center; vertical-align: middle">
-					<input type="checkbox" name="chkAll" id="chkAll" onclick="allCheck()">
+				<th style="text-align: center; vertical-align: middle"><input
+					type="checkbox" name="chkAll" id="chkAll" onclick="allCheck()">
 				</th>
 				<th style="text-align: center; vertical-align: middle">지역</th>
 				<th style="width: 150px; text-align: center; vertical-align: middle">영화관</th>
@@ -117,45 +119,56 @@
 				<th style="width: 10%; text-align: center; vertical-align: middle">영화</th>
 				<th style="text-align: center; vertical-align: middle">영화 포스터</th>
 				<th style="width: 5%; text-align: center; vertical-align: middle">상영시간</th>
-				<th style="width: 8%; text-align: center; vertical-align: middle">비고<br>(수정/삭제)</th>
+				<th style="width: 8%; text-align: center; vertical-align: middle">비고<br>(수정/삭제)
+				</th>
 			</tr>
-			
+
 			<c:if test="${fn:length(timetablelist) ne 0}">
 				<c:forEach var="i" begin="0" end="${fn:length(timetablelist)-1 }">
-				<tr>
-					<th style="text-align: center; vertical-align: middle">
-						<input type="checkbox" name="chk" id="chk" value="${timetablelist[i].timetable_code}">
-					</th>
-					
-					<th style="text-align: center; vertical-align: middle">${timetablelist[i].theater_area}</th>
+					<tr>
+						<th style="text-align: center; vertical-align: middle"><input
+							type="checkbox" name="chk" id="chk"
+							value="${timetablelist[i].timetable_code}"></th>
 
-					<th style="text-align: center; vertical-align: middle">${timetablelist[i].theater_name}</th>
-					<th style="text-align: center; vertical-align: middle">${timetablelist[i].screen_name}</th>
-					<th style="text-align: center; vertical-align: middle">${timetablelist[i].screening_date}</th>
-					<th style="text-align: center; vertical-align: middle">${timetablelist[i].m_name}</th>
-					<th style="text-align: center; vertical-align: middle">${timetablelist[i].m_poster}</th>
-					<fmt:formatDate var="start_time" pattern="yyyy-MM-dd HH:mm" value="${timetablelist[i].start_time}"/>
-					<fmt:formatDate var="end_time" pattern="yyyy-MM-dd HH:mm" value="${timetablelist[i].end_time}"/>
-					<th style="text-align: center; vertical-align: middle">${start_time}~${end_time}</th>
-					<th style="text-align: center; vertical-align: middle">
-						<button type="button" class="btn btn-info-delete" onclick="delTimetable(
+
+						<th style="text-align: center; vertical-align: middle">${theaterlist[i].theater_area}</th>
+						<th style="text-align: center; vertical-align: middle">${theaterlist[i].theater_name}</th>
+						<th style="text-align: center; vertical-align: middle">${theaterlist[i].screen_name}</th>
+
+
+
+						<th style="text-align: center; vertical-align: middle">${timetablelist[i].screening_date}</th>
+
+
+						<th style="text-align: center; vertical-align: middle">${movielist[i].m_name}</th>
+						<th style="text-align: center; vertical-align: middle">${movielist[i].m_poster}</th>
+
+
+						<th style="text-align: center; vertical-align: middle">${timetablelist[i].start_time}~${timetablelist[i].end_time}</th>
+						<th style="text-align: center; vertical-align: middle">
+							<button type="button" class="btn btn-info-delete"
+								onclick="delTimetable(
 							'${timetablelist[i].timetable_code}', '${timetablelist[i].screening_date}',
-							'${timetablelist[i].theater_area}', '${timetablelist[i].theater_name}',
-							'${timetablelist[i].screen_name}', '${timetablelist[i].m_name}',
+							'${theaterlist[i].theater_area}', '${theaterlist[i].theater_name}',
+							'${theaterlist[i].screen_name}', '${movielist[i].m_name}',
 							'${timetablelist[i].start_time}', '${timetablelist[i].end_time}')">삭제</button>
-					</th>
-				</tr>
+						</th>
+					</tr>
 				</c:forEach>
 			</c:if>
+
 
 		</table>
 	</div>
 	<a href="TimetableInsertForm?num=0">
-		<button type="button" name="add" id="add" class="btn btn-info-addMovie">상영시간표 추가</button>
+		<button type="button" name="add" id="add"
+			class="btn btn-info-addMovie">상영시간표 추가</button>
 	</a>
-	<button type="button" name="delete" id="delete" class="btn btn-info-delete" onclick="delchk()">상영시간표 삭제</button>
+	<button type="button" name="delete" id="delete"
+		class="btn btn-info-delete" onclick="delchk()">상영시간표 삭제</button>
 	<a href="adminPage.jsp">
-		<button type="button" name="backPage" id="backPage" class="btn btn-info-backPage">되돌아가기</button>
+		<button type="button" name="backPage" id="backPage"
+			class="btn btn-info-backPage">되돌아가기</button>
 	</a>
 	<jsp:include page="../include/footer.jsp" />
 </body>

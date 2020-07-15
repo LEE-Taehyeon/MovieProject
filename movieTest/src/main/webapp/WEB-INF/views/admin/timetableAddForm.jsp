@@ -51,14 +51,14 @@ $(function(){
               for(var i=0; i<result.length; i++){
                 str += '<option value="'+result[i]['theater_code']+'">'+result[i]['screen_name']+'</option>';
               }
-              $('#screen_nameA').html(str);
+              $('#theater_code').html(str);
             }
           })
     	$('#theater_name').val($("#theater_nameA option:selected").text());//선택한 극장 이름 가져오기
       })
       
-	$('#screen_nameA').change(function(){
-		$('#screen_name').val($("#screen_nameA option:selected").text());//선택한 상영관 이름 가져오기
+	$('#theater_code').change(function(){
+		$('#screen_name').val($("#theater_code option:selected").text());//선택한 상영관 이름 가져오기
 	})
 		
 
@@ -81,11 +81,11 @@ $(function(){
 function timetableList(){
 	var theater_area = document.getElementById('theater_area').value;
 	var theater_nameA = document.getElementById('theater_nameA').value;
-	var screen_nameA = document.getElementById('screen_nameA').value;
+	var screen_nameA = document.getElementById('theater_code').value;
 	//지역, 영화관, 상영관 선택 안했을 시 alert창 띄우기 위함
 	
-	var theater_code = document.getElementById('screen_nameA').value;
-	var screening_date = document.getElementById('date').value;
+	var theater_code = document.getElementById('theater_code').value;
+	var screening_date = document.getElementById('screening_date').value;
 	
 	var param = 'theater_code=' + theater_code+'&screening_date='+screening_date;
 	
@@ -111,7 +111,7 @@ function timetableList(){
 				if(result.length!=0){
 					for (var i = 0; i < result.length; i++) {
 						str += '<tr><td>'+(i+1)+'</td><td>'+result[i]['m_name']+'</td><td>'
-						+result[i][m_poster]+'</td><td>'+result[i]['start_time']+'</td><td>'+result[i]['end_time']+'</td></tr>';
+						+result[i]['m_poster']+'</td><td>'+result[i]['start_time']+'</td><td>'+result[i]['end_time']+'</td></tr>';
 					}
 					str+='</table>';
 				}else{
@@ -126,7 +126,7 @@ function timetableList(){
 
 function endTimeCal(){
 	var movie_code = document.getElementById('m_code').value;
-	var start_time = document.getElementById('time').value;
+	var start_time = document.getElementById('start_time').value;
 	var param = 'm_code='+movie_code;
 	var end_time = 0;
 	
@@ -155,8 +155,8 @@ function endTimeCal(){
 					totalHour = '0'+totalHour;
 				}
 				end_time = totalHour+":"+totalMinute;
-				alert(end_time);
-				document.getElementById('endTime').value = end_time;
+
+				document.getElementById('end_time').value = end_time;
 			}
 		});
 	}
@@ -165,10 +165,10 @@ function endTimeCal(){
 
 //start_time, end_time 의 타입이 vo와 연동이 안돼서 구현을 못하겠음
 /*function timetable_chk(){ 
-	var theater_code = document.getElementById('screen_nameA').value;
-	var screening_date = document.getElementById('date').value;
-	var start_timeStr = document.getElementById('time').value;
-	var end_timeStr = document.getElementById('endTime').value;
+	var theater_code = document.getElementById('theater_code').value;
+	var screening_date = document.getElementById('screening_date').value;
+	var start_timeStr = document.getElementById('start_time').value;
+	var end_timeStr = document.getElementById('end_time').value;
 	
 	
 	var year = screening_date.substr(0,4);
@@ -228,7 +228,7 @@ function endTimeCal(){
 	</div>
 	
 	<div class="container">
-		<form action="/movie/TimetableInsert"  onsubmit="return chk()" name="fr" class="form-horizontal" method="post">
+		<form action="/movie/InsertTimetable" class="form-horizontal" method="post">
 			<div class="form-group row">
 				<label class="col-sm-2">상영시간표코드</label>
 				<div class="col-sm-3">
@@ -259,7 +259,7 @@ function endTimeCal(){
 			<div class="form-group row">
 				<label class="col-sm-2">상영관</label>
 				<div class="col-sm-3">
-					<select id="screen_nameA" name="screen_nameA" class="custom-select" required>
+					<select id="theater_code" name="theater_code" class="custom-select" required>
 						<optgroup label="상영관"></optgroup>
 					</select>
 				</div>
@@ -268,7 +268,7 @@ function endTimeCal(){
 			<div class="form-group row">
 				<label class="col-sm-2">날짜</label>
 				<div class="col-sm-3">
-					<input type="text" name="date" id="date" class="datepicker form-control" required>
+					<input type="text" name="screening_date" id="screening_date" class="datepicker form-control" required>
 					<input type="button" onclick="timetableList()" value="상영시간표 조회">
 				</div>
 			</div>
@@ -287,20 +287,23 @@ function endTimeCal(){
 			<div class="form-group row">
 				<label class="col-sm-2">영화 상영시간</label>
 				<div class="col-sm-3">
-					<input type="time" id="time" name="time" min="06:00" required>~
-					<input type="time" id="endTime" name="endTime" required readonly>
+					<input type="time" id="start_time" name="start_time" min="06:00" required>~
+					<input type="time" id="end_time" name="end_time" required readonly>
 					<button type="button" onclick="endTimeCal()">상영시간 계산</button>
 					<!-- <button type="button" onclick="timetable_chk()">상영시간표 체크</button> -->
 				</div>
 			</div>
-			<!-- hidden -->
-			<input type="hidden" id="theater_name" name="theater_name">
-			<input type="hidden" id="screen_name" name="screen_name">
-			<!--  -->
+			
 			
 			<input type="submit" class="btn btn-primary" value="상영시간표 등록">
-			<a href="TimetableListAction.do?pageNum=1" class="btn btn-info">되돌아가기</a>
+			<a href="/movie/manageTimetable" class="btn btn-info">되돌아가기</a>
 		</form>
+		
+		<!-- hidden -->
+		<input type="hidden" id="theater_name" name="theater_name">
+		<input type="hidden" id="screen_name" name="screen_name">
+		<!--  -->
+		
 	</div>
 	<div id="timetableList">
 
@@ -308,22 +311,6 @@ function endTimeCal(){
 	
 	<jsp:include page="../include/footer.jsp" />
 </body>
-<script>
-	function chk() {
-		var screen = document.getElementById("screen_code").value;
-
-		if (screen == "none") {//상영관을 선택하지 않았을 때
-			alert("모두 선택해 주세요");
-			return false;
-		} else {
-			var yN = confirm('상영시간표를 등록하시겠습니까?');
-			if (yN) {
-				alert('상영시간표가 등록되었습니다.');
-				return true;
-			}
-		}
-	}
-</script>
 </html>
 
 
