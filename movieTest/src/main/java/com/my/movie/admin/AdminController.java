@@ -210,10 +210,10 @@ public class AdminController {
 		System.out.println("vo:" + vo);
 		List<TimetableVO> vo1 = adminService.findTimetableList(vo);
 		model.addAttribute("findTimetableList", vo1);
-		System.out.println("vo1:"+vo1);
+		System.out.println("vo1:" + vo1);
 
 		List<MovieVO> vo2 = adminService.findMovieInfoList(vo1);
-		System.out.println("vo2:"+vo2);
+		System.out.println("vo2:" + vo2);
 		model.addAttribute("findMovieInfoList", vo2);
 
 		return model;
@@ -255,19 +255,38 @@ public class AdminController {
 	public String manageTimetable(Model model, TimetableVO vo) {
 		List<TimetableVO> timetablelist = adminService.getTimetableList(vo);
 		model.addAttribute("timetablelist", timetablelist);
-		System.out.println("Sdfsfsd"+timetablelist);
+		System.out.println("timetablelist" + timetablelist);
+
+		List<String> getTheaterCode = new ArrayList<String>();
+		for (int i = 0; i < timetablelist.size(); i++) {
+			getTheaterCode.add(timetablelist.get(i).getTheater_code());
+		}
+
+		// DB에서 해당 조건에 맞는 쿼리를 반복문을 통해 실행 -> 비효율적인 것 같지만 이렇게밖에 못하겠다.
+		List<TheaterVO> theaterlist = new ArrayList<TheaterVO>();
+		for (String str : getTheaterCode) {
+			theaterlist.addAll(adminService.getTheaterList(str));
+		}
+		model.addAttribute("theaterlist", theaterlist);
+
 		
-		//List<TheaterVO> theaterlist = adminService.getTheaterList(timetablelist);
-		//model.addAttribute("theaterlist", theaterlist);
+		// DB에서 해당 조건에 맞는 쿼리를 반복문을 통해 실행 -> 비효율적인 것 같지만 이렇게밖에 못하겠다.
+		List<String> getMovieCode = new ArrayList<String>();
+		for (int i = 0; i < timetablelist.size(); i++) {
+			getMovieCode.add(timetablelist.get(i).getM_code());
+		}
 		
-		//model.addAttribute("movielist", adminService.getMovieList(theaterlist));
+		List<MovieVO> movielist = new ArrayList<MovieVO>();
+		for (String str : getMovieCode) {
+			movielist.addAll(adminService.getMovieList(str));
+		}
+		model.addAttribute("movielist", movielist);
+
 		model.addAttribute("total_timetable", adminService.getTimetableTotal());
 		System.out.println("model" + model);
 		return "/admin/adminTimetable";
 	}
 
-	
-	
 	// -----------------------------------------------------------------------------------------------------------------//
 
 	// 상영시간표 관리 - 상영시간표 삭제

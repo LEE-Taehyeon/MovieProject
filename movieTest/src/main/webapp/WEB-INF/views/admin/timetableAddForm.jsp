@@ -148,6 +148,9 @@ function endTimeCal(){
 					hour += Math.floor(totalMinute/60);
 					totalMinute %= 60;
 				}
+				if(totalHour>23){
+					totalHour%=24;
+				}
 				if(totalMinute<10){
 					totalMinute = '0'+totalMinute;
 				}
@@ -162,6 +165,64 @@ function endTimeCal(){
 	}
 }
 
+function registTimetable(){
+	var endTime = document.getElementById('end_time').value;
+	var movie_code = document.getElementById('m_code').value;
+	var start_time = document.getElementById('start_time').value;
+	var end_time = 0;
+	var param = 'm_code='+movie_code;
+	
+	
+	
+	if(endTime==""){
+		alert("상영시간 계산을 체크하세요");
+		return false;
+	}else{
+		var arr = start_time.split(':');
+
+		$.ajax({
+			url : '/movie/CalEndTime',
+			data : param,
+			async: false,
+			success : function(result) {
+				var hour = Math.floor(result/60);
+				var minute = result%60;
+				var totalMinute = +arr[1]+minute;
+				var totalHour = +arr[0]+hour;
+
+				if(totalMinute>=60){
+					hour += Math.floor(totalMinute/60);
+					totalMinute %= 60;
+				}
+				if(totalHour>23){
+					totalHour%=24;
+				}
+				if(totalMinute<10){
+					totalMinute = '0'+totalMinute;
+				}
+				if(totalHour<10){
+					totalHour = '0'+totalHour;
+				}
+				
+				end_time = totalHour+":"+totalMinute;
+			}
+		});	
+		
+		if(endTime!=end_time){
+			alert("값이 변경된 상영시간 계산을 체크하세요");
+			return false;
+		}else{
+			var yN = confirm('상영시간표를 등록하시겠습니까?');
+			if (yN) {
+				alert('상영시간표가 등록되었습니다.');
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+	}
+}
 
 //start_time, end_time 의 타입이 vo와 연동이 안돼서 구현을 못하겠음
 /*function timetable_chk(){ 
@@ -295,7 +356,7 @@ function endTimeCal(){
 			</div>
 			
 			
-			<input type="submit" class="btn btn-primary" value="상영시간표 등록">
+			<input type="submit" class="btn btn-primary" onclick="return registTimetable()" value="상영시간표 등록">
 			<a href="/movie/manageTimetable" class="btn btn-info">되돌아가기</a>
 		</form>
 		

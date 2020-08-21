@@ -129,14 +129,14 @@ public class AdminServiceImpl implements AdminService {
 	
 	// 상영시간표 리스트 출력 - 영화관 코드로 지역, 영화관, 상영관 가져오기
 	@Override
-	public List<TheaterVO> getTheaterList(List<TimetableVO> vo) {
-		return adminDAO.getTheaterList(vo);
+	public List<TheaterVO> getTheaterList(String str) {
+		return adminDAO.getTheaterList(str);
 	}
 	
 	// 상영시간표 리스트 출력 - 영화 코드로 영화제목, 포스터 가져오기
 	@Override
-	public List<MovieVO> getMovieList(List<TheaterVO> vo) {
-		return adminDAO.getMovieList(vo);
+	public List<MovieVO> getMovieList(String str) {
+		return adminDAO.getMovieList(str);
 	}
 	
 	

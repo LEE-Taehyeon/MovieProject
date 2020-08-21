@@ -141,7 +141,10 @@
 
 
 						<th style="text-align: center; vertical-align: middle">${movielist[i].m_name}</th>
-						<th style="text-align: center; vertical-align: middle">${movielist[i].m_poster}</th>
+						<th style="text-align: center; vertical-align: middle">
+							<img src='/movie/image/${movielist[i].m_posterImg}' alt="Lights" style="width:20%" class="img-thumbnail" >
+						</th>
+						
 
 
 						<th style="text-align: center; vertical-align: middle">${timetablelist[i].start_time}~${timetablelist[i].end_time}</th>
